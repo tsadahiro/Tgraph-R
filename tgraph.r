@@ -40,12 +40,15 @@ rectKasteleyne <- function(m,n){ # m*n must be even
 }
 
 m <- 4
-n <- 4
+n <- 3
 KK <- rectKasteleyne(m,n)
 K <- KK$K
-v <- rep(0,dim(K)[1]*dim(K)[2]/2)
+v <- rep(0,dim(K)[1])
 v[1] <- 1
 Kd <- K %*% diag(as.vector(solve(K) %*% matrix(v,ncol=1)))
-
-#Kt <- diag(as.vector(matrix(c(1,1i,-1),nrow=1) %*% solve(Kd)) ) %*% Kd
+vw <- rep(0,dim(K)[1])
+names(vw) <- colnames(K)
+blab <- paste(KK$xboundary, KK$yboundary, sep=",")
+vw[blab] <- diff(c(1+1i,KK$xboundary + KK$yboundary*1i))
+Kt <- diag(as.vector(matrix(vw,nrow=1) %*% solve(Kd)) ) %*% Kd
 
