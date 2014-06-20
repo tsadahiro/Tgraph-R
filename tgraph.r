@@ -11,7 +11,11 @@ rectKasteleyne <- function(m,n){ # m*n must be even
 
     # determine white vertices on the boundary
     xb1 <- seq(2,m, by=2)
-    xb2 <- seq(m-1-((m+n)%%2),1,-2)
+    if (m <= 2){
+        xb2 <- c()
+    }else{
+        xb2 <- seq(m-1-((m+n)%%2),1,-2)
+    }
     yb1 <- seq(2+(m+1)%%2,n,2)
     yb2 <- seq(n-1-(n+1)%%2,1,-2)
     xb <- c(xb1,rep(m,length(yb1)), xb2, rep(1,length(yb2)))
@@ -46,9 +50,13 @@ K <- KK$K
 v <- rep(0,dim(K)[1])
 v[1] <- 1
 Kd <- K %*% diag(as.vector(solve(K) %*% matrix(v,ncol=1)))
+colnames(Kd) <- colnames(K)
+rownames(Kd) <- rownames(K)
 vw <- rep(0,dim(K)[1])
 names(vw) <- colnames(K)
 blab <- paste(KK$xboundary, KK$yboundary, sep=",")
 vw[blab] <- diff(c(1+1i,KK$xboundary + KK$yboundary*1i))
 Kt <- diag(as.vector(matrix(vw,nrow=1) %*% solve(Kd)) ) %*% Kd
+colnames(Kt) <- colnames(K)
+rownames(Kt) <- rownames(K)
 
