@@ -167,30 +167,42 @@ Kintegral <- function(KK){
     while (y < n){
         if ((x + y)%%2 == 0){
             numout <- numout+1
-            g <- add.edges(g,c(V(g)[length(V(g))],V(g)[paste(x-1,y,sep=",")]))
+            g <- add.edges(g,c(V(g)[length(V(g))],V(g)[paste(x-1,y,sep=",")]),
+                           weight=K[paste(x,y,sep=","), paste(x,y+1,sep=",")]
+                           )
         }else{
             g <- add.vertices(g,1,attr=list(name=paste("o",numout,sep="")))
-            g <- add.edges(g,c(V(g)[paste(x-1,y,sep=",")], V(g)[length(V(g))]))
+            g <- add.edges(g,c(V(g)[paste(x-1,y,sep=",")], V(g)[length(V(g))]),
+                           weight=K[paste(x,y+1,sep=","), paste(x,y,sep=",")]
+                           )
         }
         y <- y+1
     }
     while (x > 1){
         if ((x + y)%%2 == 0){
             numout <- numout+1
-            g <- add.edges(g,c(V(g)[length(V(g))],V(g)[paste(x-1,y-1,sep=",")]))
+            g <- add.edges(g,c(V(g)[length(V(g))],V(g)[paste(x-1,y-1,sep=",")]),
+                           weight=K[paste(x,y,sep=","), paste(x-1,y,sep=",")]
+                           )
         }else{
             g <- add.vertices(g,1,attr=list(name=paste("o",numout,sep="")))
-            g <- add.edges(g,c(V(g)[paste(x-1,y-1,sep=",")], V(g)[length(V(g))]))
+            g <- add.edges(g,c(V(g)[paste(x-1,y-1,sep=",")], V(g)[length(V(g))]),
+                           weight=K[paste(x-1,y,sep=","), paste(x,y,sep=",")]
+                           )
         }
         x <- x-1
     }
     while (y > 1){
         if ((x + y)%%2 == 0){
             numout <- numout+1
-            g <- add.edges(g,c(V(g)[length(V(g))],V(g)[paste(x,y-1,sep=",")]))
+            g <- add.edges(g,c(V(g)[length(V(g))],V(g)[paste(x,y-1,sep=",")]),
+                           weight=K[paste(x,y,sep=","), paste(x,y-1,sep=",")]
+                           )
         }else{
             g <- add.vertices(g,1,attr=list(name=paste("o",numout,sep="")))
-            g <- add.edges(g,c(V(g)[paste(x,y-1,sep=",")], V(g)[length(V(g))]))
+            g <- add.edges(g,c(V(g)[paste(x,y-1,sep=",")], V(g)[length(V(g))]),
+                           weight=K[paste(x,y-1,sep=","), paste(x,y,sep=",")]
+                           )
         }
         y <- y-1
     }
@@ -199,4 +211,18 @@ Kintegral <- function(KK){
     
 }
 
+g <- Kintegral(gauge(4,3))
 
+visited <- c()
+dfsvisit <- function(v,g){
+  visited <<- c(visited,v)
+  print(V(g)[v])
+  nei <- neighbors(g,v)
+  for (n in nei){
+    if (n %in% visited){
+      
+    }else{
+      dfsvisit(n,g)
+    }
+  }
+}
