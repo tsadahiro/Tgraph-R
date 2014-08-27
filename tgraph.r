@@ -211,18 +211,22 @@ Kintegral <- function(KK){
     
 }
 
-g <- Kintegral(gauge(4,3))
-
-visited <- c()
-dfsvisit <- function(v,g){
+dfsvisit <- function(v,g,position){
   visited <<- c(visited,v)
+  V(g)[v]$coord <<- position
   print(V(g)[v])
   nei <- neighbors(g,v)
   for (n in nei){
+    print(E(g)[v %->% n]$weight)
     if (n %in% visited){
-      
     }else{
-      dfsvisit(n,g)
+        dfsvisit(n,g, position + E(g)[v %->% n]$weight)
     }
   }
 }
+
+g <- Kintegral(gauge(4,5))
+V(g)$coord <- 0
+visited <- c()
+dfsvisit("o0",g,0)
+plot(as.undirected(g), layout=cbind(Re(V(g)$coord),Im(V(g)$coord)),vertex.size=0)
